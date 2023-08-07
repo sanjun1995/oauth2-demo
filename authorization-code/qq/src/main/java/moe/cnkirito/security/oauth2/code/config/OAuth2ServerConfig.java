@@ -61,19 +61,13 @@ public class OAuth2ServerConfig {
         public void configure(HttpSecurity http) throws Exception {
             // @formatter:off
             http
-
-//                .sessionManagement()
-//                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                    .and()
-                .requestMatchers()
-                    // 保险起见，防止被主过滤器链路拦截
+                    .requestMatchers()
                     .antMatchers("/qq/**").and()
                     .authorizeRequests().anyRequest().authenticated()
                     .and()
-                .authorizeRequests()
+                    .authorizeRequests()
                     .antMatchers("/qq/info/**").access("#oauth2.hasScope('get_user_info')")
                     .antMatchers("/qq/fans/**").access("#oauth2.hasScope('get_fanslist')");
-            // @formatter:on
         }
 
     }
@@ -94,20 +88,11 @@ public class OAuth2ServerConfig {
                     .resourceIds(QQ_RESOURCE_ID)
                     .authorizedGrantTypes("authorization_code", "refresh_token", "implicit")
                     .authorities("ROLE_CLIENT")
-                    .scopes("get_user_info", "get_fanslist")
+                    .scopes("get_user_info")
                     .secret("secret")
                     .redirectUris("http://localhost:8081/aiqiyi/qq/redirect")
                     .autoApprove(true)
-                    .autoApprove("get_user_info")
-                    .and()
-                    .withClient("youku")
-                    .resourceIds(QQ_RESOURCE_ID)
-                    .authorizedGrantTypes("authorization_code", "refresh_token", "implicit")
-                    .authorities("ROLE_CLIENT")
-                    .scopes("get_user_info", "get_fanslist")
-                    .secret("secret")
-                    .redirectUris("http://localhost:8082/youku/qq/redirect");
-            // @formatter:on
+                    .autoApprove("get_user_info");
         }
 
         @Bean
